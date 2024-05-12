@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
+import os 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,6 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # internal apps 
     'user.apps.UserConfig',
+    'authentication.apps.AuthenticationConfig',
+    # external apps 
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +62,9 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR /"templates"
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,3 +135,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # custom user model sss
 
 AUTH_USER_MODEL = "user.User"
+
+# Rest framework 
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES" : [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ]
+}
+
+# JWT Configs 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME" : timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME" : timedelta(minutes=2),
+}
+
+# celery configuration 
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL","redis://localhost:6379/")
+CELERY_BACKEND_URL = os.environ.get("CELERY_BACKEND_URL","redis://localhost:6379/")
+
+# email configuration 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = '1383merajpiri@gmail.com'
+EMAIL_HOST_PASSWORD = 'umqqtbbrurukbuwf'
