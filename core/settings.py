@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # internal apps 
     'user.apps.UserConfig',
     'authentication.apps.AuthenticationConfig',
+    'product.apps.ProductConfig',
     # external apps 
     'rest_framework',
     'rest_framework_simplejwt',
