@@ -4,13 +4,10 @@ from django.contrib.auth import get_user_model
 class UserSerializer(serializers.ModelSerializer) : 
     class Meta : 
         model = get_user_model() 
-        fields = ["email"]
-    
-    
-    def validate(self,data): 
-        print("validation of data")
-        return data
-    
-    def create(self,validated_data): 
-        print('create new object of user ')
-        return get_user_model().objects.get(email="test1@gmail.com")
+        fields = ["email","is_active","is_staff"]
+        
+    def to_representation(self,instance) : 
+        context = super().to_representation(instance)
+        context["joind_date"] = instance.joind.strftime("%Y-%m-%d")
+        context["joind_time"] = instance.joind.strftime("%H:%M-%S")
+        return context

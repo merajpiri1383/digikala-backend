@@ -4,6 +4,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from time import sleep
+import sys
 
 
 
@@ -31,3 +32,4 @@ def send_email(user) :
 def send_otp_code(email) : 
     user = get_user_model().objects.get(email=email)
     send_email(user=user)
+    sys.stdout.write(f"CODE : {user.otp}")
