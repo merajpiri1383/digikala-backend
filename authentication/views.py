@@ -37,7 +37,7 @@ class RegisterAPIView(APIView) :
 class ActivateEmailAPIView(APIView) : 
     serializer_class = UserSerializer
     @extend_schema(
-        parame ters = [
+        parameters = [
             OpenApiParameter(name="email",required=True),
             OpenApiParameter(name="otp",required=True,description="code to activate account .")
         ]
@@ -63,3 +63,33 @@ class ActivateEmailAPIView(APIView) :
             return Response(data=data) 
         else : 
             return Response({"detail":"email or otp is not valid"},status=status.HTTP_400_BAD_REQUEST)
+
+class LoginAPIView(APIView) :
+    serializer_class = RegisterSerializer 
+    
+    @extend_schema(
+        parameters = [
+            OpenApiParameter(name="email",required=True),
+            OpenApiParameter(name="password",required=True),
+        ]
+    )
+    
+    def post(self,request) : 
+        email = request.data.get("email")
+        password = request.data.get("password")
+        if not email : return Response({"detail":"email is required ."},status=status.HTTP_400_BAD_REQUEST)
+        if not password : return Response({"detail":"password is required ."},status=status.HTTP_400_BAD_REQUEST)
+        # check is email or password is valid 
+        try : 
+            user = get_user_model().objects.get(email=email)
+        except : 
+            return Response({"detail":"email or password is not corrent"},status=status.HTTP_400_BAD_REQUEST)
+        if user.check_password(password) : 
+            refresh_token = RefreshToken.for_user(user)
+            data = {}
+            data["user"] = UserSerializer(user).data
+            data["access_token"] = str(refresh_token.access_token)
+            data["refresh_token"] = str(refresh_token)
+            return Response(data=data)
+        else : 
+            return Response({"detail":"email or password is not corrent"},status=status.HTTP_400_BAD_REQUEST)
