@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # external apps 
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -141,7 +142,8 @@ AUTH_USER_MODEL = "user.User"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES" : [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ]
+    ],
+    "DEFAULT_SCHEMA_CLASS" : "drf_spectacular.openapi.AutoSchema"
 }
 
 # JWT Configs 
@@ -163,3 +165,11 @@ EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = '1383merajpiri@gmail.com'
 EMAIL_HOST_PASSWORD = 'umqqtbbrurukbuwf'
+
+# drf spectacular 
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'backend of digikala',
+    'DESCRIPTION': 'build with django and django rest framework ',
+    'VERSION': '1.0.0',
+}

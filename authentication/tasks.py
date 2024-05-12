@@ -31,5 +31,5 @@ def send_email(user) :
 @shared_task
 def send_otp_code(email) : 
     user = get_user_model().objects.get(email=email)
-    send_email(user=user)
+    # send_email(user=user)
     sys.stdout.write(f"CODE : {user.otp}")
