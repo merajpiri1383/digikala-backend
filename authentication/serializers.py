@@ -17,8 +17,21 @@ class RegisterSerializer(serializers.ModelSerializer) :
         return data
     
     def create(self,data): 
-        print("create new user")
         user = get_user_model().objects.create(email=data.get("email")) 
         user.set_password(data.get("password"))
         user.save()
         return user
+    
+class ChangePasswordSerializer(serializers.ModelSerializer) : 
+    class Meta : 
+        model = get_user_model()
+        fields = ["email","password"]
+    def update(self,instance,validated_data) : 
+        instance.set_password(validated_data.get("password"))
+        instance.save()
+        return instance
+    
+    def validate(self,data) : 
+        if not password_regex.findall(data.get("password")) : 
+            raise serializers.ValidationError("password must contains letters and integers and at least 8 character ")
+        return data

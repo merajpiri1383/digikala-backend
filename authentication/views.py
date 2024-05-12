@@ -2,17 +2,19 @@
 from rest_framework.views import APIView 
 from rest_framework import status 
 from rest_framework.response import Response 
-from rest_framework.decorators import api_view
 # serializers 
 from user.serializers import UserSerializer
-from authentication.serializers import RegisterSerializer 
+from authentication.serializers import RegisterSerializer ,ChangePasswordSerializer
 # models 
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 # tasks 
-from authentication.tasks import send_otp_code
+from authentication.tasks import send_otp_code,forget_password
 # drf tools 
 from drf_spectacular.utils import extend_schema, OpenApiExample,OpenApiParameter
+# permissions 
+from rest_framework.permissions import IsAuthenticated
+
 
 class RegisterAPIView(APIView) :
     serializer_class = RegisterSerializer
@@ -93,3 +95,36 @@ class LoginAPIView(APIView) :
             return Response(data=data)
         else : 
             return Response({"detail":"email or password is not corrent"},status=status.HTTP_400_BAD_REQUEST)
+    
+class ForgetPasswordAPIView(APIView) : 
+    serializer_class = RegisterSerializer
+    
+    @extend_schema(
+        parameters = [
+            OpenApiParameter(name="email",required=True)
+        ]
+    )
+    def post(self,request) : 
+        email = request.data.get("email")
+        if not email : return Response({"detail":"email field is required ."},status=status.HTTP_400_BAD_REQUEST)
+        forget_password.apply_async(args=[email])
+        return Response({"detail":"code is sent to you "})
+
+
+class ResetPasswordAPIView(APIView) : 
+    permission_classes = [IsAuthenticated]
+    serializer_class = ChangePasswordSerializer
+    @extend_schema(
+        parameters = [
+            OpenApiParameter(name="password",required=True)
+        ]
+    )
+    def put(self,request) : 
+        data =  request.data.copy()
+        data["email"] = request.user.email
+        serializer = ChangePasswordSerializer(data=data,instance=request.user)
+        if serializer.is_valid(): 
+            serializer.save()
+            return Response(data={"detail":"your password has been changed successfully ."})
+        else : 
+            return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)

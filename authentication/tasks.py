@@ -26,10 +26,18 @@ def send_email(user) :
     )
     message.attach_alternative(html,"text/html")
     message.send()
-    delete_user_after_120_if_not_activated(user.email)
 
 @shared_task
 def send_otp_code(email) : 
     user = get_user_model().objects.get(email=email)
+    user.save()
+    # send_email(user=user)
+    sys.stdout.write(f"CODE : {user.otp}")
+    delete_user_after_120_if_not_activated(user.email)
+
+@shared_task
+def forget_password(email) : 
+    user = get_user_model().objects.get(email=email)
+    user.save()
     # send_email(user=user)
     sys.stdout.write(f"CODE : {user.otp}")
