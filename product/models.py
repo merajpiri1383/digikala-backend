@@ -1,20 +1,6 @@
 from django.db import models
-from django.utils.text import slugify
+from category.models import Category,Brand
 
-class Brand(models.Model) : 
-    name = models.CharField(max_length=300)
-    slug = models.SlugField(null=True,blank=True)
-    
-    def __str__(self) : 
-        return str(self.name)
-    
-    def save(self,*args,**kwargs) : 
-        self.slug = slugify(self.name,allow_unicode=True)
-        return super().save(*args,**kwargs)
-    
-class Category(Brand) :
-    class Meta : 
-        proxy = True 
 
 class Color(models.Model) : 
     name = models.CharField(max_length=150)

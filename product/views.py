@@ -1,3 +1,4 @@
-from django.shortcuts import render
+from rest_framework.generic import CreateAPIView 
 
-# Create your views here.
+class CreateColor(CreateAPIView) : 
+    pass 
