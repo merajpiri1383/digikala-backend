@@ -175,3 +175,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'build with django and django rest framework ',
     'VERSION': '1.0.0',
 }
+
+# media files 
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"

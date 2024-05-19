@@ -1,20 +1,20 @@
 # rest framework tools
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 # serializers
-from category.serialiers import BrandSerializer,CategorySerializer
+from category.serialiers import CategorySerializer
 # permissions
-from category.permissions import IsStaffOrReadOnly
+from utils.permissions import IsStaffOrNot
 # models 
-from category.models import Brand,Category
+from category.models import Category,Brand
 
 class CategoryBase :
     serializer_class = CategorySerializer
-    permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsStaffOrNot]
     queryset = Category.objects.all()
 
 class BrandBase :
-    serializer_class = BrandSerializer
-    permission_classes = [IsStaffOrReadOnly]
+    serializer_class = CategorySerializer
+    permission_classes = [IsStaffOrNot]
     queryset = Brand.objects.all()
 
 class CreateListCategoryAPIView(CategoryBase,ListCreateAPIView) :

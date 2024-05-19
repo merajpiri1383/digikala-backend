@@ -3,20 +3,38 @@ from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIVi
 from rest_framework.response import Response
 from rest_framework import status
 # permissions
-from category.permissions import IsStaffOrReadOnly
+from utils.permissions import IsStaffOrReadOnly,IsStaffOrNot
 # serializers 
-from product.serializers import ColorSerializer
+from product.serializers import ColorSerializer,ProductSerializer
 # models 
-from product.models import Color
+from product.models import Color,Product
  
+######################### color ##############################
 
 class ColorBase :
     permission_classes = [IsStaffOrReadOnly]
     serializer_class = ColorSerializer 
     queryset = Color.objects.all()
-
+ 
 class CreateColorAPIView(ColorBase,ListCreateAPIView) :
     pass
 
 class ColorAPIView(ColorBase,RetrieveUpdateDestroyAPIView) :
     pass
+
+######################### end color ##############################
+
+######################### product ############################
+
+class ProductBase: 
+    permission_classes = [IsStaffOrReadOnly]
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+
+class CreateListProductAPIView(ProductBase,ListCreateAPIView): 
+    pass 
+
+class ProductAPIView(ProductBase,RetrieveUpdateDestroyAPIView) : 
+    pass 
+
+######################### end product ############################
