@@ -3,18 +3,18 @@ from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIVi
 # serializers
 from category.serialiers import CategorySerializer
 # permissions
-from utils.permissions import IsStaffOrNot
+from utils.permissions import IsStaffOrReadOnly
 # models 
 from category.models import Category,Brand
 
 class CategoryBase :
     serializer_class = CategorySerializer
-    permission_classes = [IsStaffOrNot]
+    permission_classes = [IsStaffOrReadOnly]
     queryset = Category.objects.all()
 
 class BrandBase :
     serializer_class = CategorySerializer
-    permission_classes = [IsStaffOrNot]
+    permission_classes = [IsStaffOrReadOnly]
     queryset = Brand.objects.all()
 
 class CreateListCategoryAPIView(CategoryBase,ListCreateAPIView) :

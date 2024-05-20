@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'product.apps.ProductConfig',
     'category.apps.CategoryConfig',
+    'cart.apps.CartConfig',
     # external apps 
     'rest_framework',
     'rest_framework_simplejwt',

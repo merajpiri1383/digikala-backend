@@ -8,6 +8,8 @@ from django.urls import reverse
 
 class BrandTest(APITestCase) :
     
+    data = {"name" :"brand 1"}
+    
     def setUp(self) :
         self.brand = Brand.objects.create(name="brand 1")
         self.user = get_user_model().objects.create(email="test@gmail.com")
@@ -20,18 +22,24 @@ class BrandTest(APITestCase) :
     def test_slug_of_brand(self) :
         self.assertEqual(self.brand.slug,slugify(self.brand.name,allow_unicode=True))
 
-    def test_permission_for_staff_user(self):
+    def test_permission_for_staff_user_post_method(self):
         self.client.force_authenticate(user=self.staff_user)
+        response = self.client.post(self.list_url,data=self.data)
+        self.assertEqual(response.status_code,201)
+
+    def test_permission_for_normal_user_post_method(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(self.list_url)
+        self.assertEqual(response.status_code,403)
+    
+    def test_permission_for_not_authenticated_user_get_method(self) : 
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code,200)
-
-    def test_permission_for_normal_user(self):
-        self.client.force_authenticate(user=self.user)
-        response = self.client.get(self.list_url)
-        self.assertEqual(response.status_code,403)
-
+    
 
 class CategoryTest(APITestCase) :
+    
+    data = {"name" : "category 1"}
     
     def setUp(self) : 
         self.category = Category.objects.create(name="category 1")
@@ -47,10 +55,10 @@ class CategoryTest(APITestCase) :
 
     def test_permission_for_staff_user(self):
         self.client.force_authenticate(user=self.staff_user)
-        response = self.client.get(self.list_url)
-        self.assertEqual(response.status_code,200)
+        response = self.client.post(self.list_url,data=self.data)
+        self.assertEqual(response.status_code,201)
 
     def test_permission_for_normal_user(self):
         self.client.force_authenticate(user=self.user)
-        response = self.client.get(self.list_url)
+        response = self.client.post(self.list_url)
         self.assertEqual(response.status_code,403)

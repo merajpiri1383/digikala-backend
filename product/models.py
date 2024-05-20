@@ -1,5 +1,6 @@
 from django.db import models
 from category.models import Category,Brand
+from django.utils.text import slugify
 
 
 class Color(models.Model) : 
@@ -21,6 +22,10 @@ class Product(models.Model) :
     picture = models.ImageField(upload_to="products/pictures")
     images = models.ManyToManyField(Image)
     introduction = models.TextField(null=True,blank=True)
+    
+    @property 
+    def slug(self) : 
+        return slugify(self.name,allow_unicode=True)
     
 class BaseProperty(models.Model) : 
     name = models.CharField(max_length=50)
