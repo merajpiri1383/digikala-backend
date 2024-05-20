@@ -1,0 +1,7 @@
+env/
+.github/
+.idea/
+.vscode/
+media/
+.gitignore
+db.sqlite3
