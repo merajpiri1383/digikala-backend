@@ -1,0 +1,1 @@
+from authentication.tests.test_base import TestBase

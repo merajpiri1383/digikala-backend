@@ -154,7 +154,8 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.ScopedRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES" : {
-        "login" : "2/minute",
+        "login" : "10/minute",
+        "change_password" : "1/hour"
     }
 }
 

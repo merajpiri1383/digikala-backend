@@ -2,30 +2,18 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 import re 
 
-password_regex = re.compile(r"(?=.*[0-9])(?=.*[a-z]).{8,16}")
+password_regex = re.compile(r"(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,16}")
 
-
-class RegisterSerializer(serializers.ModelSerializer) : 
-    password = serializers.SlugField()
+class AuthUserSerializer(serializers.ModelSerializer) : 
     class Meta : 
         model = get_user_model() 
-        fields = ["email","password"]
-    
-    def validate(self,data):
-        if not password_regex.findall(data.get("password")) : 
-            raise serializers.ValidationError("password must contains letters and integers and at least 8 character ")
-        return data
-    
-    def create(self,data): 
-        user = get_user_model().objects.create(email=data.get("email")) 
-        user.set_password(data.get("password"))
-        user.save()
-        return user
+        fields = ["email"]
+
     
 class ChangePasswordSerializer(serializers.ModelSerializer) : 
     class Meta : 
         model = get_user_model()
-        fields = ["email","password"]
+        fields = ["password"]
     def update(self,instance,validated_data) : 
         instance.set_password(validated_data.get("password"))
         instance.save()
@@ -33,5 +21,5 @@ class ChangePasswordSerializer(serializers.ModelSerializer) :
     
     def validate(self,data) : 
         if not password_regex.findall(data.get("password")) : 
-            raise serializers.ValidationError("password must contains letters and integers and at least 8 character ")
+            raise serializers.ValidationError("weak-password")
         return data
