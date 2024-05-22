@@ -11,7 +11,7 @@ services :
       - 8000:8000
     command : sh -c "python manage.py runserver 0.0.0.0:8000"
     env_file : 
-      - path : ./.env
+      - path : ./.env.dev
         required : true
     depends_on : 
       - digikala_backend_redis
@@ -22,7 +22,7 @@ services :
       context : ./
       dockerfile : ./Dockerfile
     env_file : 
-      - path : ./.env
+      - path : ./.env.dev
         required : true
     volumes : 
       - .:/code

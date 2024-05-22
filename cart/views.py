@@ -7,11 +7,11 @@ from rest_framework.permissions import IsAuthenticated
 from cart.models import Cart,CartProduct
 from product.models import Product
 # serializers 
-from cart.serializers import CartSerializer,CartProductSerializer
+from cart.serializers import CartSerializer
 
 class CartProductAPIView(APIView) : 
     permission_classes = [IsAuthenticated]
-    
+    serializer_class = CartSerializer
     def get_cart(self,request) : 
         if not request.data.get("id") : 
             return Response({"detail":"id is required"},status=status.HTTP_400_BAD_REQUEST)
