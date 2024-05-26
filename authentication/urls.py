@@ -7,5 +7,6 @@ urlpatterns = [
     path("auth/",views.AuthAPIView.as_view(),name="auth"),
     path("token/refresh/",TokenRefreshView.as_view()),
     path("login/",views.LoginAPIView.as_view(),name="login"),
-    path("password/update/",views.ChangePasswordAPIView.as_view(),name="password-update")
+    path("password/update/",views.ChangePasswordAPIView.as_view(),name="password-update"),
+    path("send-otp/",views.SendOTPAPIView.as_view(),name="send-otp"),
 ]

@@ -69,7 +69,6 @@ class AuthAPIView(APIView) :
                                        status=status.HTTP_400_BAD_REQUEST)
         # check is email or password is valid 
         user,created = get_user_model().objects.get_or_create(email=email)
-        send_otp_code.apply_async(args=[user.email])
         return Response({"created":created})
 
 # change password 
@@ -109,3 +108,15 @@ class LoginAPIView(APIView) :
         else : 
             return Response(data={"detail":"invalid-password"},
                             status=status.HTTP_400_BAD_REQUEST)
+
+# send OTP 
+class SendOTPAPIView(AuthAPIView) : 
+    def post(self,request) : 
+        email = request.data.get("email")
+        if not email : return Response({"detail":"required-email"},status=status.HTTP_400_BAD_REQUEST)
+        try : 
+            get_user_model().objects.get(email=email)
+        except : 
+            return Response({"detail":"invalid-email"},status=status.HTTP_400_BAD_REQUEST)
+        send_otp_code.apply_async(args=[email])
+        return Response({})

@@ -9,6 +9,7 @@ class TestBase(APITestCase) :
         self.auth_url = reverse("auth")
         self.activate_url = reverse("activate")
         self.login_url = reverse("login")
+        self.send_otp_url = reverse("send-otp")
         self.password = "Password@123"
         self.update_password_url = reverse("password-update")
         self.user.set_password(self.password)
