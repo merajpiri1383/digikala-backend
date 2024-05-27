@@ -1,5 +1,6 @@
 from rest_framework import serializers 
 from django.contrib.auth import get_user_model 
+from cart.serializers import CartSerializer
 
 class UserSerializer(serializers.ModelSerializer) : 
     class Meta : 
@@ -10,4 +11,5 @@ class UserSerializer(serializers.ModelSerializer) :
         context = super().to_representation(instance)
         context["joind_date"] = instance.joind.strftime("%Y-%m-%d")
         context["joind_time"] = instance.joind.strftime("%H:%M-%S")
+        context["carts"] = CartSerializer(instance.carts.all(),many=True).data
         return context

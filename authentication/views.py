@@ -1,4 +1,5 @@
 # rest framework tools 
+
 from rest_framework.views import APIView 
 from rest_framework import status 
 from rest_framework.response import Response 
@@ -74,6 +75,7 @@ class AuthAPIView(APIView) :
 # change password 
 class ChangePasswordAPIView(APIView) : 
     permission_classes = [IsAuthenticated]
+    serializer_class = ChangePasswordSerializer
     def put(self,request) : 
         serializer = ChangePasswordSerializer(instance=request.user,data=request.data)
         if serializer.is_valid() : 

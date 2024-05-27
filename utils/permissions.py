@@ -11,3 +11,8 @@ class IsStaffOrReadOnly(BasePermission) :
             return True 
         else : 
             return request.user.is_staff and request.user.is_authenticated
+
+class IsOwnUserOrNot(BasePermission) : 
+    def has_object_permission(self,request,view,object) : 
+        if request.user.is_authenticated : 
+            return request.user.email == object.email

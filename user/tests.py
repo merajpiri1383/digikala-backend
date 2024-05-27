@@ -1,12 +1,23 @@
-from django.test import TestCase
+from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
-from django.db.utils import IntegrityError
+from django.urls import reverse
+from user.serializers import UserSerializer
 
-
-class TestUser(TestCase) : 
+class TestUser(APITestCase) : 
     
-    # check is exception occur when two user have the same email
-    def test_unique_email(self): 
-        get_user_model().objects.create(email="test@gmail.com")
-        with self.assertRaises(IntegrityError) : 
-            get_user_model().objects.create(email="test@gmail.com")
+    def setUp(self) : 
+        self.user = get_user_model().objects.create(email="test@gmail.com")
+        self.user_url = reverse("user")
+    
+    def tearDown(self) -> None : 
+        self.user.delete()
+    
+    def test_not_authenticate_user(self) : 
+        response = self.client.get(self.user_url)
+        self.assertEqual(response.status_code,401)
+    
+    def test_get_data(self) :
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.user_url)
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.data,UserSerializer(self.user).data)

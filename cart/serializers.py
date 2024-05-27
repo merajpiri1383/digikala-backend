@@ -1,6 +1,5 @@
 from rest_framework import serializers 
 from cart.models import Cart,CartProduct
-from user.serializers import UserSerializer
 
 class CartProductSerializer(serializers.ModelSerializer) : 
     class Meta : 
@@ -16,7 +15,6 @@ class CartSerializer(serializers.ModelSerializer) :
         context = super().to_representation(instance)
         context["create_date"] = instance.created.strftime("%Y-%m-%d")
         context["create_time"] = instance.created.strftime("%H:%M:%S")
-        context["user"] = UserSerializer(instance.user).data
+        context["user"] = instance.user.email
         context["cart_products"] = CartProductSerializer(instance.cart_products.all(),many=True).data
         return context
-    
