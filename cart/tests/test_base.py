@@ -1,6 +1,7 @@
 from rest_framework.test import APITestCase
 from cart.models import Cart,CartProduct
-from product.models import Product,Brand,Category
+from product.models import Product
+from category.models import Brand,Category,SubCategory
 from django.contrib.auth import get_user_model 
 from django.urls import reverse
 
@@ -10,17 +11,18 @@ class CartBaseTest(APITestCase) :
         self.user = get_user_model().objects.create(email="test@gmail.com")
         self.brand = Brand.objects.create(name="brand 1")
         self.category = Category.objects.create(name="category 1")
+        self.sub_category = SubCategory.objects.create(name="sub category",category=self.category)
         self.product = Product.objects.create(
             name="product 1",
             price=15,
             brand = self.brand,
-            category = self.category
+            sub_category = self.sub_category
         )
         self.product_2 = Product.objects.create(
             name = "product 2",
             price = 20,
             brand = self.brand,
-            category = self.category
+            sub_category = self.sub_category
         )
         self.cart = Cart.objects.create(user=self.user)
         self.cart_product = CartProduct.objects.create(

@@ -1,5 +1,5 @@
 from django.db import models
-from category.models import Category,Brand
+from category.models import SubCategory,Brand
 from django.utils.text import slugify
 
 
@@ -16,8 +16,8 @@ class Product(models.Model) :
     name = models.CharField(max_length=300)
     price = models.PositiveIntegerField()
     discount = models.PositiveIntegerField(default=0)
-    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,related_name="products")
-    category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name="products")
+    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,related_name="products",null=True,blank=True)
+    sub_category = models.ForeignKey(SubCategory,on_delete=models.CASCADE,related_name="products")
     colors = models.ManyToManyField(Color)
     picture = models.ImageField(upload_to="products/pictures")
     images = models.ManyToManyField(Image)
