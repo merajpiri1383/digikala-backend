@@ -9,16 +9,16 @@ from pathlib import Path
 
 
 class TestProductBase(APITestCase) : 
-    image = Path(__file__).parent.parent.parent / "static/test.jpg"
-    data = {
-        "name": "product test",
-        "price": 10,
-        "introduction": "product introduction ",
-        "category" : 1,
-        "brand" : 1,
-    }
-    
-    def setUp(self) -> None : 
+    @classmethod
+    def setUpTestData(self) -> None : 
+        self.image = Path(__file__).parent.parent.parent / "static/test.jpg"
+        self.data = {
+            "name": "product test",
+            "price": 10,
+            "introduction": "product introduction ",
+            "category" : 1,
+            "brand" : 1,
+        }
         self.create_list_url = reverse("create-list-product")
         self.detail_url = reverse("detail-product",args=[1])
         self.brand = Brand.objects.create(name="brand 1")
@@ -30,20 +30,12 @@ class TestProductBase(APITestCase) :
             category = self.category,
             brand = self.brand
         )
-    
-    def tearDown(self) -> None : 
-        self.brand.delete()
-        self.category.delete()
-        self.staff_user.delete()
 
 class TestProductPermissions(TestProductBase) : 
-    def setUp(self) : 
+    @classmethod
+    def setUpTestData(self) : 
+        super().setUpTestData()
         self.user = get_user_model().objects.create(email="test@gmail.com")
-        super().setUp()
-    
-    def tearDown(self) -> None : 
-        self.user.delete()
-        super().tearDown()
         
     def test_permissions_for_normal_user(self) : 
         self.client.force_authenticate(user=self.user)

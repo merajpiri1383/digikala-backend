@@ -5,8 +5,8 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 class CartBaseTest(APITestCase) : 
-    
-    def setUp(self) : 
+    @classmethod
+    def setUpTestData(self) : 
         self.user = get_user_model().objects.create(email="test@gmail.com")
         self.brand = Brand.objects.create(name="brand 1")
         self.category = Category.objects.create(name="category 1")
@@ -34,8 +34,3 @@ class CartBaseTest(APITestCase) :
             count = 1
         )
         self.cart_product_url = reverse("cart-product-edit")
-    
-    def tearDown(self) -> None:
-        self.user.delete()
-        self.product.delete()
-        self.product_2.delete()

@@ -3,8 +3,8 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse 
 
 class TestBase(APITestCase) : 
-    
-    def setUp(self) -> None : 
+    @classmethod
+    def setUpTestData(self) -> None : 
         self.user = get_user_model().objects.create(email="test@gmail.com")
         self.auth_url = reverse("auth")
         self.activate_url = reverse("activate")
@@ -14,6 +14,3 @@ class TestBase(APITestCase) :
         self.update_password_url = reverse("password-update")
         self.user.set_password(self.password)
         self.user.save()
-    
-    def tearDown(self) -> None : 
-        self.user.delete()

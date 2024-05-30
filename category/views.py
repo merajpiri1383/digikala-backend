@@ -1,7 +1,7 @@
 # rest framework tools
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 # serializers
-from category.serialiers import CategorySerializer
+from category.serializers import CategorySerializer,BrandSerializer
 # permissions
 from utils.permissions import IsStaffOrReadOnly
 # models 
@@ -13,7 +13,7 @@ class CategoryBase :
     queryset = Category.objects.all()
 
 class BrandBase :
-    serializer_class = CategorySerializer
+    serializer_class = BrandSerializer
     permission_classes = [IsStaffOrReadOnly]
     queryset = Brand.objects.all()
 

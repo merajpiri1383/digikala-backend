@@ -4,13 +4,11 @@ from django.urls import reverse
 from user.serializers import UserSerializer
 
 class TestUser(APITestCase) : 
-    
-    def setUp(self) : 
+    @classmethod
+    def setUpTestData(self) : 
         self.user = get_user_model().objects.create(email="test@gmail.com")
         self.user_url = reverse("user")
     
-    def tearDown(self) -> None : 
-        self.user.delete()
     
     def test_not_authenticate_user(self) : 
         response = self.client.get(self.user_url)
