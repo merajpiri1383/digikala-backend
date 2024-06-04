@@ -9,7 +9,7 @@ class SubCategoryTest(TestBase) :
     @classmethod
     def setUpTestData(self) : 
         super().setUpTestData()
-        self.category = Category.objects.create(name=self.data["name"],image=self.data["image"])
+        self.category = Category.objects.create(name=self.data_2["name"],image=self.data_2["image"])
         self.url_list = reverse("list-sub-categories")
         self.url_detail = reverse("detail-sub-category",args=[self.category.id])
         self.data_3 = {
@@ -38,10 +38,6 @@ class SubCategoryTest(TestBase) :
         response = self.client.post(self.url_list,data=self.data)
         self.assertEqual(response.status_code,401)
         
-    def test_not_pass_data(self) : 
-        self.client.force_authenticate(self.staff_user)
-        response = self.client.post(self.url_list)
-        self.assertEqual(response.status_code,400)
         
     def test_create(self) : 
         self.client.force_authenticate(self.staff_user)

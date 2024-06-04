@@ -40,28 +40,5 @@ class BaseSubCategory(CategoryBase):
 class ListCreateSubCategoryAPIView(BaseSubCategory,ListCreateAPIView) : 
     pass 
 
-class SubCategoryAPIView(BaseSubCategory,APIView) : 
-    
-    def get_object(self,pk) : 
-        try : 
-            self.object = SubCategory.objects.get(id=pk)
-        except : 
-            return Response({"not-found"},status=status.HTTP_400_BAD_REQUEST)
-    
-    def get(self,request,pk) : 
-        if self.get_object(pk) : return self.get_object(pk)
-        return Response(SubCategorySerializer(self.object,context={"request":request}).data)
-    
-    def put(self,request,pk) : 
-        if self.get_object(pk) : return self.get_object(pk) 
-        serializer = SubCategorySerializer(self.object,data=request.data,partial=True,context={"request":request})
-        if serializer.is_valid() : 
-            serializer.save()
-            return Response(serializer.data)
-        else : 
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self,request,pk) : 
-        if self.get_object(pk) : return self.get_object(pk) 
-        self.object.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class SubCategoryAPIView(BaseSubCategory,RetrieveUpdateDestroyAPIView) : 
+    pass 

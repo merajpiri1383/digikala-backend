@@ -88,6 +88,7 @@ class ChangePasswordAPIView(APIView) :
 # login with password for registered users 
 class LoginAPIView(APIView) : 
     serializer_class = UserSerializer
+    throttle_scope = "login"
     def post(self,request) : 
         if not request.data.get("email") : 
             return Response(data={"detail" : "required-email"},
@@ -120,5 +121,5 @@ class SendOTPAPIView(AuthAPIView) :
             get_user_model().objects.get(email=email)
         except : 
             return Response({"detail":"invalid-email"},status=status.HTTP_400_BAD_REQUEST)
-        send_otp_code.apply_async(args=[email])
+        # send_otp_code.apply_async(args=[email])
         return Response({})

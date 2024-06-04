@@ -8,6 +8,10 @@ class SubCategorySerializer(serializers.ModelSerializer) :
         model = SubCategory
         fields = ["id","name","image","category"]
     
+    def __init__(self,instance=None,**kwargs) :
+        kwargs["partial"] = True
+        super().__init__(instance,**kwargs)
+    
     def to_representation(self,instance) : 
         context = super().to_representation(instance)
         context["category"] = {
@@ -21,7 +25,11 @@ class CategorySerializer(serializers.ModelSerializer) :
     class Meta :
         model = Category
         fields = ["id","name","image"]
-    
+        
+    def __init__(self, instance=None, **kwargs):
+        kwargs["partial"] = True
+        super().__init__(instance,**kwargs)
+        
     def to_representation(self,instance) : 
         context = super().to_representation(instance)
         context["sub_categories"] = SubCategorySerializer(instance=instance.sub_categorys,many=True).data

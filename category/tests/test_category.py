@@ -29,3 +29,8 @@ class CategoryTest(TestBase) :
         self.assertIn("id",keys)
         self.assertIn("image",keys)
         self.assertIn("sub_categories",keys)
+    
+    def test_put(self) -> None : 
+        self.client.force_authenticate(self.staff_user)
+        response = self.client.put(self.get_category_url,data={})
+        self.assertEqual(response.status_code,200)

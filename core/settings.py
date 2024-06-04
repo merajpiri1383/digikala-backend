@@ -156,15 +156,15 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.ScopedRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES" : {
-        "login" : "10/minute",
-        "change_password" : "1/hour"
+        "login" : "15/minute",
+        "change_password" : "3/hour"
     }
 }
 
 # JWT Configs 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME" : timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME" : timedelta(minutes=20),
+    "ACCESS_TOKEN_LIFETIME" : timedelta(minutes=10),
+    "REFRESH_TOKEN_LIFETIME" : timedelta(minutes=30),
 }
 
 # celery configuration 
