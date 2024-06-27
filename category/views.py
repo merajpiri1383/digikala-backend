@@ -26,13 +26,13 @@ class CreateListCategoryAPIView(CategoryBase,ListCreateAPIView) :
 class CategoryAPIView(CategoryBase,RetrieveUpdateDestroyAPIView) :
     pass
 
-class CreateListBrandAPIView(CategoryBase,ListCreateAPIView) :
+class CreateListBrandAPIView(BrandBase,ListCreateAPIView) :
     pass
 
 class BrandAPIView(BrandBase,RetrieveUpdateDestroyAPIView) :
     pass
 
-class BaseSubCategory(CategoryBase): 
+class BaseSubCategory: 
     serializer_class = SubCategorySerializer
     queryset = SubCategory.objects.all()
     permission_classes = [IsStaffOrReadOnly]

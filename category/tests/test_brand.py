@@ -10,6 +10,7 @@ class BrandTest(TestBase) :
         super().setUpTestData()
         self.brand = Brand.objects.create(name="brand 1")
         self.list_url = reverse("create-list-category")
+        self.detail_url = reverse("brand-detail",args=[self.brand.id])
 
     def test_permission_for_staff_user_post_method(self):
         self.client.force_authenticate(user=self.staff_user) 
@@ -26,3 +27,12 @@ class BrandTest(TestBase) :
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code,200)
     
+    def test_put_when_no_data(self) : 
+        self.client.force_authenticate(self.staff_user)
+        response = self.client.put(self.detail_url)
+        self.assertEqual(response.status_code,200)
+    
+    def test_create_with_required_fields(self) : 
+        self.client.force_authenticate(self.staff_user)
+        response = self.client.post(self.list_url)
+        self.assertEqual(response.status_code,400)

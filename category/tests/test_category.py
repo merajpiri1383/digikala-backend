@@ -24,6 +24,7 @@ class CategoryTest(TestBase) :
         self.assertEqual(response.status_code,403)
     
     def test_serializer_data(self) -> None :
+        response = self.client.get(self.get_category_url).data
         keys = self.client.get(self.get_category_url).data.keys()
         self.assertIn("name",keys)
         self.assertIn("id",keys)

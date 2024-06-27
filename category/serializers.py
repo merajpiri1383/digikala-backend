@@ -27,15 +27,31 @@ class CategorySerializer(serializers.ModelSerializer) :
         fields = ["id","name","image"]
         
     def __init__(self, instance=None, **kwargs):
-        kwargs["partial"] = True
+        if instance : 
+            kwargs["partial"] = True
         super().__init__(instance,**kwargs)
         
     def to_representation(self,instance) : 
         context = super().to_representation(instance)
-        context["sub_categories"] = SubCategorySerializer(instance=instance.sub_categorys,many=True).data
+        context["sub_categories"] = SubCategorySerializer(
+            instance=instance.sub_categorys,
+            many=True,
+            context = {"request" : self.context.get("request")}
+        ).data
         return context
 
 class BrandSerializer(serializers.ModelSerializer) : 
+    
+    def __init__(self,instance=None,**kwargs) : 
+        if instance : 
+            kwargs["partial"] = True
+        super().__init__(instance,**kwargs)
+    
     class Meta :
         model = Brand
         fields = ["id","name","image"]
+    
+    def to_representation(self, instance):
+        context = super().to_representation(instance)
+        context["products"] = ProductSerializer(instance.products.all(),many=True).data
+        return context
