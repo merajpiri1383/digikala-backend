@@ -18,7 +18,11 @@ class SubCategorySerializer(serializers.ModelSerializer) :
             'id' : instance.category.id,
             'name' : instance.category.name
         }
-        context["products"] = ProductSerializer(instance.products,many=True).data
+        context["products"] = ProductSerializer(
+            instance.products,
+            many=True,
+            context = {"request" : self.context.get("request")}
+        ).data
         return context
 
 class CategorySerializer(serializers.ModelSerializer) :

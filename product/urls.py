@@ -8,4 +8,6 @@ urlpatterns = [
     ######################### product ############################
     path("",views.CreateListProductAPIView.as_view(),name="create-list-product"),
     path("<pk>/",views.ProductAPIView.as_view(),name="detail-product"),
+    path("<pk>/image/<image_id>/",views.ImageProductAPIView.as_view(),name="product-image-delete"),
+    path("<pk>/image/",views.ImageProductAPIView.as_view(),name="product-image"),
 ]

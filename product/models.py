@@ -9,9 +9,6 @@ class Color(models.Model) :
     def __str__(self) : 
         return str(self.name)
 
-class Image(models.Model) : 
-    picture = models.ImageField(upload_to="products/pictures")
-
 class Product(models.Model) : 
     name = models.CharField(max_length=300)
     price = models.PositiveIntegerField()
@@ -20,12 +17,15 @@ class Product(models.Model) :
     sub_category = models.ForeignKey(SubCategory,on_delete=models.CASCADE,related_name="products")
     colors = models.ManyToManyField(Color)
     picture = models.ImageField(upload_to="products/pictures")
-    images = models.ManyToManyField(Image)
     introduction = models.TextField(null=True,blank=True)
     
     @property 
     def slug(self) : 
         return slugify(self.name,allow_unicode=True)
+    
+class Image(models.Model) : 
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name="images")
+    picture = models.ImageField(upload_to="products/pictures")
     
 class BaseProperty(models.Model) : 
     name = models.CharField(max_length=50)
