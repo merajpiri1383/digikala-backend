@@ -9,8 +9,12 @@ class BaseFeature(models.Model) :
     class Meta : 
         abstract = True
 
-class Info(BaseFeature) : 
+class Info(models.Model) : 
+    name = models.CharField(max_length=150)
     product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name="info")
+
+class SubInfo(BaseFeature) : 
+    info = models.ForeignKey(Info,on_delete=models.CASCADE,related_name="sub_info")
     
 class Feature(BaseFeature) : 
     product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name="feature")

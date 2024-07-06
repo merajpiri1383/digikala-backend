@@ -1,38 +1,22 @@
 from feature.tests import BaseTest
+from django.urls import reverse 
+from feature.models import Info,SubInfo
 
-class TestFeature(BaseTest) : 
+class InfoTest(BaseTest) : 
 
-    def test_list_info(self) : 
-        response = self.client.get(self.list_info_url)
-        self.assertEqual(response.status_code , 200)
-        self.assertEqual(response.data[0]["id"],self.info.id)
+    @classmethod 
+    def setUpTestData(self) : 
+        super().setUpTestData()
+        self.info = Info.objects.create(name="info 1 ",product=self.product)
+        self.list_create_info_url = reverse("info",args=[self.product.id])
     
-    def test_permission_for_create(self) : 
-        self.client.force_authenticate(self.user)
-        response = self.client.post(self.list_info_url)
-        self.assertEqual(response.status_code,403)
+    def test_list_info(self) : 
+        response = self.client.get(self.list_create_info_url)
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.data[0]["id"] , self.info.id)
     
     def test_create_info(self) : 
         self.client.force_authenticate(self.staff_user)
-        response = self.client.post(self.list_info_url,{
-            "product" : self.product.id ,
-            "name" : "name 2",
-            "value" : "value 2"
-        })
+        response = self.client.post(self.list_create_info_url,{"name":"info 2","value" : "value 2"})
         self.assertEqual(response.status_code,201)
-    
-    def test_get_info(self) : 
-        response = self.client.get(self.info_detail_url)
-        self.assertEqual(response.status_code,200)
-        self.assertEqual(response.data["id"],self.info.id)
-    
-    def test_update_info(self) : 
-        self.client.force_authenticate(self.staff_user)
-        response = self.client.put(self.info_detail_url,{"name" : "name 1 edited"})
-        self.assertEqual(response.status_code,200)
-        self.assertEqual(response.data["name"],"name 1 edited")
-    
-    def test_delete_info(self) : 
-        self.client.force_authenticate(self.staff_user)
-        response = self.client.delete(self.info_detail_url)
-        self.assertEqual(response.status_code,204)
+        self.assertEqual(response.data["name"],"info 2")

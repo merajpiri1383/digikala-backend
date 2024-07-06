@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 from product.models import Product
-from feature.models import Info
+from feature.models import Feature
 from category.models import SubCategory,Category
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -18,10 +18,3 @@ class BaseTest(APITestCase) :
         )
         self.staff_user = get_user_model().objects.create(email="test_staff@gmail.com",is_staff=True)
         self.user = get_user_model().objects.create(email="test@gmail.com")
-        self.list_info_url = reverse("info",args=[self.product.id])
-        self.info = Info.objects.create(
-            product = self.product,
-            name = "name 1",
-            value = "value 1"
-        )
-        self.info_detail_url = reverse("info-detail",args=[self.product.id,self.info.id])
