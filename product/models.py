@@ -26,17 +26,3 @@ class Product(models.Model) :
 class Image(models.Model) : 
     product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name="images")
     picture = models.ImageField(upload_to="products/pictures")
-    
-class BaseProperty(models.Model) : 
-    name = models.CharField(max_length=50)
-    value = models.CharField(max_length=150)
-    def __str__(self) : 
-        return f"{self.name} : {self.value}"
-    class Meta : 
-        abstract = True
-
-class Property(BaseProperty) : 
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name="properties")
-    
-class Feature(BaseProperty) : 
-    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name="features")

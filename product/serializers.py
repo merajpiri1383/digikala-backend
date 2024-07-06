@@ -17,6 +17,11 @@ class ProductSerializer(serializers.ModelSerializer) :
     class Meta : 
         model = Product 
         fields = ["id","name","price","discount","sub_category","brand","picture","introduction"]
+
+    def __init__(self,instnace=None,**kwargs) : 
+        if instnace : 
+            kwargs["partial"] = True
+        super().__init__(instance=instnace,**kwargs)
     
     def to_representation(self,instance) :  
         context = super().to_representation(instance)

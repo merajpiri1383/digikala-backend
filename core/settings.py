@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'product.apps.ProductConfig',
     'category.apps.CategoryConfig',
     'cart.apps.CartConfig',
+    'feature.apps.FeatureConfig',
     # external apps 
     'rest_framework',
     'rest_framework_simplejwt',
