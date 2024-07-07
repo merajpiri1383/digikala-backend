@@ -2,9 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from utils.permissions import IsStaffOrReadOnly
-from feature.models import Feature,Info
+from feature.models import Feature,Info,SubInfo
 from product.models import Product
-from feature.serializers import FeatureSerializer,InfoSerializer
+from feature.serializers import FeatureSerializer,InfoSerializer,SubInfoSerializer
 
 ########################## feature #######################
 
@@ -92,7 +92,7 @@ class ListCreateInfoAPIView(APIView) :
         try : 
             self.object = Product.objects.get(id=id)
         except : 
-            return Response(
+            return Response( 
                 data={"detail":"product with this id does not exist"},
                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -114,4 +114,77 @@ class ListCreateInfoAPIView(APIView) :
         else : 
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
+
+class InfoDetailAPIView(APIView) : 
+
+    permission_classes = [IsStaffOrReadOnly]
+    serializer_class = InfoSerializer
+
+    def dispatch(self,request,id) : 
+        self.result = None 
+        try : 
+            self.object = Info.objects.get(id=id)
+        except : 
+            self.result = Response({"detail":"Info with this id does not exist ."},status=status.HTTP_400_BAD_REQUEST)
+        return super().dispatch(request,id)
+
+    def get(self,request,id) : 
+        if self.result : return self.result
+        serializer = InfoSerializer(self.object)
+        return Response(serializer.data)
+    
+    def put(self,request,id) : 
+        if self.result : return self.result 
+        serializer = InfoSerializer(instance=self.object,data=request.data)
+        if serializer.is_valid() : 
+            serializer.save() 
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+    def post(self,request,id) : 
+        if self.result : return self.result 
+        data = request.data.copy()
+        data["info"] = id
+        serializer = SubInfoSerializer(data=data)
+        if serializer.is_valid() : 
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self,request,id) : 
+        if self.result : return self.result 
+        self.object.delete() 
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class SubInfoDetail(APIView) : 
+    serializer_class = SubInfoSerializer 
+    permission_classes = [IsStaffOrReadOnly]
+
+    def dispatch(self,request,id) : 
+        self.result = None 
+        try : 
+            self.object = SubInfo.objects.get(id=id)
+        except : 
+            self.result = Response({"detail":"SubInfo with this id does not exist"},status.HTTP_400_BAD_REQUEST)
+        return super().dispatch(request,id)
+
+    def get(self,request,id) : 
+        if self.result : return self.result
+        serializer = SubInfoSerializer(self.object)
+        return Response(serializer.data)
+    
+    def put(self,request,id) : 
+        if self.result : return self.result 
+        data = request.data.copy()
+        data["info"] = self.object.info.id
+        serializer = SubInfoSerializer(data=data,instance=self.object)
+        if serializer.is_valid() : 
+            serializer.save() 
+            return Response(serializer.data)
+        return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self,request,id) : 
+        if self.result : return self.result 
+        self.object.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 ########################## end info ##########################

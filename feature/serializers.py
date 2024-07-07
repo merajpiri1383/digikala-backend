@@ -19,13 +19,29 @@ class FeatureSerializer(serializers.ModelSerializer) :
         }
         return context
 
+class SubInfoSerializer(serializers.ModelSerializer) :
+
+    def __init__(self,instance=None,**kwargs) : 
+        if instance : 
+            kwargs["partial"] = True 
+        super().__init__(instance,**kwargs)
+         
+    class Meta : 
+        model = SubInfo
+        fields = ["id","info","name","value"]
+
 class InfoSerializer(serializers.ModelSerializer) : 
 
     def __init__(self,instance=None,**kwargs) : 
         if instance : 
             kwargs["partial"] = True
         super().__init__(instance,**kwargs)
-
+ 
     class Meta : 
         model = Info
         fields = ["id","product","name"]
+    
+    def to_representation(self,instance) : 
+        context = super().to_representation(instance)
+        context["sub_info"] = SubInfoSerializer(instance.sub_info.all(),many=True).data
+        return context
