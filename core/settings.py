@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'category.apps.CategoryConfig',
     'cart.apps.CartConfig',
     'feature.apps.FeatureConfig',
+    'settings.apps.SettingsConfig',
     # external apps 
     'rest_framework',
     'rest_framework_simplejwt',
@@ -164,7 +165,7 @@ REST_FRAMEWORK = {
 
 # JWT Configs 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME" : timedelta(minutes=20),
+    "ACCESS_TOKEN_LIFETIME" : timedelta(minutes=40),
     "REFRESH_TOKEN_LIFETIME" : timedelta(hours=2),
 }
 

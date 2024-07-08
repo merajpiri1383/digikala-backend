@@ -1,7 +1,7 @@
 from rest_framework import serializers 
 from product.models import Product,Color,Image
 from category.models import SubCategory
-from feature.serializers import FeatureSerializer
+from feature.serializers import FeatureSerializer,InfoSerializer
 
 
 class ImageSerializer(serializers.ModelSerializer) : 
@@ -31,6 +31,10 @@ class ProductSerializer(serializers.ModelSerializer) :
             "name" : instance.sub_category.name,
         }
         context["feature"] = FeatureSerializer(instance.feature.all(),many=True).data
+        context["info"] = InfoSerializer(
+            instance=instance.info.all(),
+            many=True
+        ).data
         context["images"] = ImageSerializer(
             instance.images,
             many=True,
