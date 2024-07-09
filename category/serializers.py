@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from category.models import Category,SubCategory,Brand
+from category.models import Category,SubCategory,Brand,PosterCategory
 from product.serializers import ProductSerializer
 
 
@@ -11,7 +11,7 @@ class SubCategorySerializer(serializers.ModelSerializer) :
     def __init__(self,instance=None,**kwargs) :
         kwargs["partial"] = True
         super().__init__(instance,**kwargs)
-    
+     
     def to_representation(self,instance) : 
         context = super().to_representation(instance)
         context["category"] = {
@@ -24,6 +24,11 @@ class SubCategorySerializer(serializers.ModelSerializer) :
             context = {"request" : self.context.get("request")}
         ).data
         return context
+    
+class PosterCategorySerializer(serializers.ModelSerializer) : 
+    class Meta : 
+        model = PosterCategory
+        fields = ["id","category","image"]
 
 class CategorySerializer(serializers.ModelSerializer) :
     class Meta :

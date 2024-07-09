@@ -19,3 +19,11 @@ class Brand(BaseCategory) :
 
 class SubCategory(BaseCategory): 
     category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name="sub_categorys")
+
+
+class PosterCategory (models.Model) : 
+    category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name="posters")
+    image = models.ImageField(upload_to="category/posters")
+
+    def __str__(self) : 
+        return f"PosterCategory f{self.category.name}"

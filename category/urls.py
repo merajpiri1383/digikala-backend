@@ -8,4 +8,6 @@ urlpatterns = [
     path("sub-category/",views.ListCreateSubCategoryAPIView.as_view(),name="list-sub-categories"),
     path("",views.CreateListCategoryAPIView.as_view(),name="create-list-category"),
     path("<pk>/",views.CategoryAPIView.as_view(),name="category-detail"),
-]
+    path("<id>/poster/",views.PosterCategoryCreateListAPIView.as_view(),name="poster-category-list"),
+    path("poster/<pk>/",views.PosterCategoryDetailAPIView.as_view(),name="poster-category-detail"),
+] 

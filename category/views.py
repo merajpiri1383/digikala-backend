@@ -1,21 +1,18 @@
 # rest framework tools
-from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView,DestroyAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status 
-# serializers
-from category.serializers import CategorySerializer,BrandSerializer,SubCategorySerializer
-# permissions
+from category.serializers import CategorySerializer,BrandSerializer,SubCategorySerializer,PosterCategorySerializer
 from utils.permissions import IsStaffOrReadOnly
-# models 
-from category.models import Category,Brand,SubCategory
+from category.models import Category,Brand,SubCategory,PosterCategory
 
 class CategoryBase :
     serializer_class = CategorySerializer
     permission_classes = [IsStaffOrReadOnly]
     queryset = Category.objects.all()
 
-class BrandBase :
+class BrandBase : 
     serializer_class = BrandSerializer
     permission_classes = [IsStaffOrReadOnly]
     queryset = Brand.objects.all()
@@ -42,3 +39,38 @@ class ListCreateSubCategoryAPIView(BaseSubCategory,ListCreateAPIView) :
 
 class SubCategoryAPIView(BaseSubCategory,RetrieveUpdateDestroyAPIView) : 
     pass 
+
+#################### Poster Category ########################
+
+class PosterCategoryCreateListAPIView(APIView) : 
+
+    permission_classes = [IsStaffOrReadOnly]
+    serializer_class = None 
+
+    def dispatch(self,request,id) : 
+        self.result = None 
+        try : 
+            self.object = Category.objects.get(id=id)
+        except : 
+            self.result = Response({"detail":"category with this id does not exist "},status.HTTP_400_BAD_REQUEST)
+        return super().dispatch(request,id)
+
+    def get(self,request,id) : 
+        if self.result : return self.result
+        serializer = PosterCategorySerializer(self.object.posters.all(),many=True,context={"request":request})
+        return Response(serializer.data)
+    
+    def post(self,request,id) : 
+        if self.result : return self.result
+        data = request.data.copy()
+        data["category"] = id
+        serializer = PosterCategorySerializer(data=data)
+        if serializer.is_valid() : 
+            serializer.save()
+            return Response(serializer.data,status.HTTP_201_CREATED)
+        return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
+
+class PosterCategoryDetailAPIView(DestroyAPIView) : 
+    permission_classes = [IsStaffOrReadOnly]
+    serializer_class = PosterCategorySerializer
+    queryset = PosterCategory.objects.all()
