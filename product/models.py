@@ -18,6 +18,7 @@ class Product(models.Model) :
     colors = models.ManyToManyField(Color)
     picture = models.ImageField(upload_to="products/pictures")
     introduction = models.TextField(null=True,blank=True)
+    sell_count = models.PositiveIntegerField(default=0)
     
     @property 
     def slug(self) : 

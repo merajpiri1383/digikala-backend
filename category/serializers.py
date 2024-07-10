@@ -42,6 +42,11 @@ class CategorySerializer(serializers.ModelSerializer) :
         
     def to_representation(self,instance) : 
         context = super().to_representation(instance)
+        context["posters"] = PosterCategorySerializer(
+            instance.posters.all(),
+            many=True,
+            context={"request":self.context.get("request")}
+        ).data
         context["sub_categories"] = SubCategorySerializer(
             instance=instance.sub_categorys,
             many=True,

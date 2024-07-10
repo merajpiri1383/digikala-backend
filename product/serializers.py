@@ -19,7 +19,7 @@ class ProductSerializer(serializers.ModelSerializer) :
         model = Product 
         fields = ["id","name","price","discount","sub_category","brand","picture","introduction"]
 
-    def __init__(self,instnace=None,**kwargs) : 
+    def __init__(self,instnace=None,**kwargs) :  
         if instnace : 
             kwargs["partial"] = True
         super().__init__(instance=instnace,**kwargs)

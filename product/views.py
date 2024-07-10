@@ -1,5 +1,5 @@
 # rest framework tools
-from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView,ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,6 +9,7 @@ from utils.permissions import IsStaffOrReadOnly
 from product.serializers import ColorSerializer,ProductSerializer,ImageSerializer
 # models 
 from product.models import Color,Product
+from category.models import Category
  
 ######################### color ##############################
 
@@ -70,8 +71,29 @@ class ImageProductAPIView(APIView) :
             image.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else : 
-            return Response(
+            return Response( 
                 data = {"detail":"image with this id does not exist"} , 
                 status = status.HTTP_400_BAD_REQUEST
             )
-######################### end product ############################
+######################### end product ############################ 
+
+
+######################### most sell product ###################### 
+
+class MostSellProductAPIView(ListAPIView) : 
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all().order_by("-sell_count")
+
+class MostSellCategoryAPIView(APIView) : 
+    serializer_class = ProductAPIView
+
+    def get(self,request,id) : 
+        try : 
+            category = Category.objects.get(id=id)
+        except : 
+            return Response({"detail":"category with this id does not exist"},status.HTTP_400_BAD_REQUEST)
+        products = []
+        for sub_category in category.sub_categorys.all() :
+            for product in sub_category.products.all().order_by("-sell_count") : 
+                products.append(product)
+        return Response(ProductSerializer(products,many=True,context={"request":request}).data)
