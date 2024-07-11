@@ -26,6 +26,7 @@ class ProductSerializer(serializers.ModelSerializer) :
     
     def to_representation(self,instance) :  
         context = super().to_representation(instance)
+        context["colors"] = ColorSerializer(instance.colors.all(),many=True).data
         context["sub_category"] = {
             "id" : instance.sub_category.id,
             "name" : instance.sub_category.name,

@@ -15,7 +15,7 @@ class Product(models.Model) :
     discount = models.PositiveIntegerField(default=0)
     brand = models.ForeignKey(Brand,on_delete=models.CASCADE,related_name="products",null=True,blank=True)
     sub_category = models.ForeignKey(SubCategory,on_delete=models.CASCADE,related_name="products")
-    colors = models.ManyToManyField(Color)
+    colors = models.ManyToManyField(Color,related_name="colors")
     picture = models.ImageField(upload_to="products/pictures")
     introduction = models.TextField(null=True,blank=True)
     sell_count = models.PositiveIntegerField(default=0)

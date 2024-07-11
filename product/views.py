@@ -1,5 +1,5 @@
 # rest framework tools
-from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView,ListAPIView
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView,ListAPIView,DestroyAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -21,8 +21,37 @@ class ColorBase :
 class CreateColorAPIView(ColorBase,ListCreateAPIView) :
     pass
 
-class ColorAPIView(ColorBase,RetrieveUpdateDestroyAPIView) :
+class ColorAPIView(ColorBase,DestroyAPIView) :
     pass
+
+
+class ProductColorAPIView(APIView) : 
+    permission_classes = [IsStaffOrReadOnly]
+    serializer_class = ProductSerializer
+
+    def dispatch(self,request,product_id,color_id) : 
+        self.result = None
+        try : 
+            self.product = Product.objects.get(id=product_id)
+        except : 
+            self.result = Response({"detail" :"product with this id does not exist"},status.HTTP_400_BAD_REQUEST)
+        try :
+            self.color = Color.objects.get(id=color_id)
+        except : 
+            self.result = Response({"detail":"color with this id does not exist "},status.HTTP_400_BAD_REQUEST)
+        return super().dispatch(request,product_id,color_id)
+
+    def post(self,request,product_id,color_id) : 
+        if self.result : return self.result 
+        self.product.colors.add(self.color)
+        serializer = ProductSerializer(self.product)
+        return Response(serializer.data)
+    
+    def delete(self,request,product_id,color_id) : 
+        if self.result : return self.result
+        self.product.colors.remove(self.color)
+        serializer = ProductSerializer(self.product)
+        return Response(serializer.data)
 
 ######################### end color ##############################
 

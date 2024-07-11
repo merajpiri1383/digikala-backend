@@ -13,4 +13,5 @@ urlpatterns = [
     path("<pk>/",views.ProductAPIView.as_view(),name="detail-product"),
     path("<pk>/image/<image_id>/",views.ImageProductAPIView.as_view(),name="product-image-delete"),
     path("<pk>/image/",views.ImageProductAPIView.as_view(),name="product-image"),
+    path("<product_id>/color/<color_id>/",views.ProductColorAPIView.as_view(),name="product-color"),
 ]  
